@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <OPENCVBASE>D:\opencv</OPENCVBASE>
+    <CVBUILDPATH>build</CVBUILDPATH>
+    <VCVERSION>vc12</VCVERSION>
+    <CVPLATFORM>x86</CVPLATFORM>
+    <OPENCVINCLUDE>$(OPENCVBASE)\$(CVBUILDPATH)\include</OPENCVINCLUDE>
+    <OPENCVLIB>$(OPENCVBASE)\$(CVBUILDPATH)\$(CVPLATFORM)\$(VCVERSION)\lib</OPENCVLIB>
+    <OPENCVBIN>$(OPENCVBASE)\$(CVBUILDPATH)\$(CVPLATFORM)\$(VCVERSION)\bin</OPENCVBIN>
+    <OPENCVSTATICLIB>$(OPENCVBASE)\$(CVBUILDPATH)\$(CVPLATFORM)\$(VCVERSION)\staticlib</OPENCVSTATICLIB>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <Link Condition="'$(Configuration)'=='Debug'">
+      <AdditionalDependencies>opencv_calib3d2410d.lib;opencv_contrib2410d.lib;opencv_core2410d.lib;opencv_features2d2410d.lib;opencv_flann2410d.lib;opencv_gpu2410d.lib;opencv_highgui2410d.lib;opencv_imgproc2410d.lib;opencv_legacy2410d.lib;opencv_ml2410d.lib;opencv_nonfree2410d.lib;opencv_objdetect2410d.lib;opencv_ocl2410d.lib;opencv_photo2410d.lib;opencv_stitching2410d.lib;opencv_superres2410d.lib;opencv_ts2410d.lib;opencv_video2410d.lib;opencv_videostab2410d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OPENCVLIB)</AdditionalLibraryDirectories>
+    </Link>
+    <Link Condition="'$(Configuration)'=='Release'">
+      <AdditionalDependencies>opencv_calib3d2410.lib;opencv_contrib2410.lib;opencv_core2410.lib;opencv_features2d2410.lib;opencv_flann2410.lib;opencv_gpu2410.lib;opencv_highgui2410.lib;opencv_imgproc2410.lib;opencv_legacy2410.lib;opencv_ml2410.lib;opencv_nonfree2410.lib;opencv_objdetect2410.lib;opencv_ocl2410.lib;opencv_photo2410.lib;opencv_stitching2410.lib;opencv_superres2410.lib;opencv_ts2410.lib;opencv_video2410.lib;opencv_videostab2410.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OPENCVLIB)</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OPENCVINCLUDE)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="OPENCVBASE">
+      <Value>$(OPENCVBASE)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CVBUILDPATH">
+      <Value>$(CVBUILDPATH)</Value>
+    </BuildMacro>
+    <BuildMacro Include="VCVERSION">
+      <Value>$(VCVERSION)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CVPLATFORM">
+      <Value>$(CVPLATFORM)</Value>
+    </BuildMacro>
+    <BuildMacro Include="OPENCVINCLUDE">
+      <Value>$(OPENCVINCLUDE)</Value>
+    </BuildMacro>
+    <BuildMacro Include="OPENCVLIB">
+      <Value>$(OPENCVLIB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="OPENCVBIN">
+      <Value>$(OPENCVBIN)</Value>
+    </BuildMacro>
+    <BuildMacro Include="OPENCVSTATICLIB">
+      <Value>$(OPENCVSTATICLIB)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

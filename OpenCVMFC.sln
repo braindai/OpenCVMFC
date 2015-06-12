@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CVMFC", "CVMFC\CVMFC.vcxproj", "{CE89A16E-E291-48E7-B387-841846C63AB8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenCVMFC", "OpenCVMFC\OpenCVMFC.vcxproj", "{F1C00ED2-AA97-4CC5-9718-08FB020AFDB3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CE89A16E-E291-48E7-B387-841846C63AB8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CE89A16E-E291-48E7-B387-841846C63AB8}.Debug|Win32.Build.0 = Debug|Win32
+		{CE89A16E-E291-48E7-B387-841846C63AB8}.Release|Win32.ActiveCfg = Release|Win32
+		{CE89A16E-E291-48E7-B387-841846C63AB8}.Release|Win32.Build.0 = Release|Win32
+		{F1C00ED2-AA97-4CC5-9718-08FB020AFDB3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F1C00ED2-AA97-4CC5-9718-08FB020AFDB3}.Debug|Win32.Build.0 = Debug|Win32
+		{F1C00ED2-AA97-4CC5-9718-08FB020AFDB3}.Release|Win32.ActiveCfg = Release|Win32
+		{F1C00ED2-AA97-4CC5-9718-08FB020AFDB3}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
