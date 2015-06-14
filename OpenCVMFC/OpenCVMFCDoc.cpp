@@ -10,8 +10,9 @@
 #endif
 
 #include "OpenCVMFCDoc.h"
-
 #include <propkey.h>
+#include "../Utility/Utility.h"
+using namespace Utility_DXQ;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -29,8 +30,7 @@ END_MESSAGE_MAP()
 
 COpenCVMFCDoc::COpenCVMFCDoc()
 {
-	// TODO:  在此添加一次性构造代码
-	m_sPath = _T("");
+	// TODO:  在此添加一次性构造代码	
 }
 
 COpenCVMFCDoc::~COpenCVMFCDoc()
@@ -45,7 +45,7 @@ BOOL COpenCVMFCDoc::OnNewDocument()
 
 	// TODO:  在此添加重新初始化代码
 	// (SDI 文档将重用该文档)
-
+	m_Img.create(480, 640, CV_8UC(1));
 	return TRUE;
 }
 
@@ -144,7 +144,12 @@ BOOL COpenCVMFCDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		return FALSE;
 
 	// TODO:  在此添加您专用的创建代码
-
+	StringCov sCov;
+	CString cs(lpszPathName);
+	
+	m_Img = imread(sCov.CStringToString(cs));
+	if (m_Img.empty())
+		return FALSE;
 	return TRUE;
 }
 
@@ -152,6 +157,9 @@ BOOL COpenCVMFCDoc::OnOpenDocument(LPCTSTR lpszPathName)
 BOOL COpenCVMFCDoc::OnSaveDocument(LPCTSTR lpszPathName)
 {
 	// TODO:  在此添加专用代码和/或调用基类
-
+	// TODO:  在此添加您专用的创建代码
+	StringCov sCov;
+	CString cs(lpszPathName);
+	imwrite(sCov.CStringToString(cs), m_Img);
 	return CDocument::OnSaveDocument(lpszPathName);
 }

@@ -194,7 +194,6 @@ void CMainFrame::OnViewCustomize()
 	pDlgCust->EnableUserDefinedToolbars();
 	pDlgCust->Create();
 }
-
 LRESULT CMainFrame::OnToolbarCreateNew(WPARAM wp,LPARAM lp)
 {
 	LRESULT lres = CMDIFrameWndEx::OnToolbarCreateNew(wp,lp);
@@ -213,7 +212,6 @@ LRESULT CMainFrame::OnToolbarCreateNew(WPARAM wp,LPARAM lp)
 	pUserToolbar->EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, strCustomize);
 	return lres;
 }
-
 
 BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParentWnd, CCreateContext* pContext) 
 {

@@ -11,7 +11,6 @@ protected: // 仅从序列化创建
 	COpenCVMFCDoc();
 	DECLARE_DYNCREATE(COpenCVMFCDoc)
 	Mat m_Img;
-	CString m_sPath;
 // 特性
 public:
 
