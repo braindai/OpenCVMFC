@@ -33,9 +33,9 @@ CChildFrame::~CChildFrame()
 BOOL CChildFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
 	// TODO:  在此处通过修改 CREATESTRUCT cs 来修改窗口类或样式
+	cs.style = WS_CHILD | WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_MAXIMIZE | FWS_ADDTOTITLE;
 	if( !CMDIChildWndEx::PreCreateWindow(cs) )
 		return FALSE;
-
 	return TRUE;
 }
 

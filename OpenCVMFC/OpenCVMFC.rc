@@ -130,8 +130,6 @@ BEGIN
         MENUITEM "打开(&O)...\tCtrl+O",           ID_FILE_OPEN
         MENUITEM "关闭(&C)",                      ID_FILE_CLOSE
         MENUITEM SEPARATOR
-        MENUITEM "打印设置(&R)...",                 ID_FILE_PRINT_SETUP
-        MENUITEM SEPARATOR
         MENUITEM "最近的文件",                       ID_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "退出(&X)",                      ID_APP_EXIT
@@ -160,9 +158,8 @@ BEGIN
         MENUITEM "保存(&S)\tCtrl+S",              ID_FILE_SAVE
         MENUITEM "另存为(&A)...",                  ID_FILE_SAVE_AS
         MENUITEM SEPARATOR
-        MENUITEM "打印(&P)...\tCtrl+P",           ID_FILE_PRINT
-        MENUITEM "打印预览(&V)",                    ID_FILE_PRINT_PREVIEW
-        MENUITEM "打印设置(&R)...",                 ID_FILE_PRINT_SETUP
+        MENUITEM "应用修改",                        ID_IMG_APPLY
+        MENUITEM "恢复/刷新",                       ID_IMG_REFRESH
         MENUITEM SEPARATOR
         MENUITEM "最近的文件",                       ID_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
@@ -175,9 +172,32 @@ BEGIN
         MENUITEM "剪切(&T)\tCtrl+X",              ID_EDIT_CUT
         MENUITEM "复制(&C)\tCtrl+C",              ID_EDIT_COPY
         MENUITEM "粘贴(&P)\tCtrl+V",              ID_EDIT_PASTE
+        MENUITEM SEPARATOR
+        MENUITEM "测试",                          ID_Menu_TEST
+    END
+    POPUP "点处理"
+    BEGIN
+        MENUITEM "彩色变灰阶",                       ID_COLOR_TO_GRAY
+        MENUITEM "图像反相",                        ID_IMAGE_INVERT
+        MENUITEM SEPARATOR
+        MENUITEM "垂直镜像",                        ID_FLIP_V
+        MENUITEM "水平镜像",                        ID_FLIP_H
+        MENUITEM "180 度旋转",                     ID_FLIP
+        MENUITEM SEPARATOR
+        MENUITEM "30 度旋转",                      ID_ROTATION_30
+        MENUITEM "仿射变换",                        ID_WARP_AFFINE
+        MENUITEM "透视变换",                        ID_WARP_PERSPECT
+        MENUITEM SEPARATOR
+        MENUITEM "亮度变换",                        ID_IMAGE_ADJUST
+        MENUITEM "灰阶图像直方图",                     ID_IMAGE_HISTOGRAM
+        MENUITEM "直方图均衡化",                      ID_HIST_EQUALIZE
     END
     POPUP "视图(&V)"
     BEGIN
+        MENUITEM "原始大小",                        ID_VIEW_ORIGIN
+        MENUITEM "放大",                          ID_VIEW_ZOOMOUT
+        MENUITEM "缩小",                          ID_VIEW_ZOOMIN
+        MENUITEM SEPARATOR
         POPUP "工具栏和停靠窗口(&T)"
         BEGIN
             MENUITEM "<占位符>",                       ID_VIEW_TOOLBAR
@@ -322,7 +342,7 @@ END
 STRINGTABLE
 BEGIN
     IDR_MAINFRAME           "OpenCVMFC"
-    IDR_OpenCVMFCTYPE       "\nOpenCVMFC\nOpenCVMFC\nBitmap(*.bmp)\n.bmp\nOpenCVMFC.Document\nOpenCVMFC.Document"
+    IDR_OpenCVMFCTYPE       "\nNew\n\nBitmap(*.bmp);jpg(*.jpg)\n.bmp;.jpg\nOpenCVMFC.Document\nOpenCVMFC.Document"
     ID_WINDOW_MANAGER       "窗口(&W)..."
 END
 
@@ -452,6 +472,13 @@ END
 STRINGTABLE
 BEGIN
     IDS_EDIT_MENU           "编辑"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_ORIGIN          "origin size"
+    ID_VIEW_ZOOMOUT         "zoom out"
+    ID_VIEW_ZOOMIN          "zoom in"
 END
 
 #endif    // 中文(简体，中国) resources

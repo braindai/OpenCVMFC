@@ -140,16 +140,26 @@ void COpenCVMFCDoc::Dump(CDumpContext& dc) const
 
 BOOL COpenCVMFCDoc::OnOpenDocument(LPCTSTR lpszPathName)
 {
-	if (!CDocument::OnOpenDocument(lpszPathName))
-		return FALSE;
+	//if (!CDocument::OnOpenDocument(lpszPathName))
+	//	return FALSE;
 
 	// TODO:  在此添加您专用的创建代码
+
+#ifdef _DEBUG
+	if (IsModified())
+		TRACE(traceAppMsg, 0, "Warning: OnOpenDocument replaces an unsaved document.\n");
+#endif
+
+	ENSURE(lpszPathName);
+	DeleteContents();
 	StringCov sCov;
 	CString cs(lpszPathName);
-	
 	m_Img = imread(sCov.CStringToString(cs));
 	if (m_Img.empty())
+	{
+		AfxMessageBox(_T("open failed!"));
 		return FALSE;
+	}
 	return TRUE;
 }
 
@@ -158,8 +168,28 @@ BOOL COpenCVMFCDoc::OnSaveDocument(LPCTSTR lpszPathName)
 {
 	// TODO:  在此添加专用代码和/或调用基类
 	// TODO:  在此添加您专用的创建代码
+	ENSURE(lpszPathName);
 	StringCov sCov;
 	CString cs(lpszPathName);
-	imwrite(sCov.CStringToString(cs), m_Img);
-	return CDocument::OnSaveDocument(lpszPathName);
+	bool bSaveSuccessFlag;
+	try 
+	{
+		bSaveSuccessFlag = imwrite(sCov.CStringToString(cs), m_Img);
+	}
+	catch (CException &e)
+	{
+//		TRACE(e.GetErrorMessage());
+		bSaveSuccessFlag = false;
+	}
+	if (bSaveSuccessFlag)
+	{
+		SetModifiedFlag(FALSE);     // back to unmodified
+		return TRUE;
+	}
+	else
+	{
+		AfxMessageBox(_T("save failed!"));
+		return FALSE;
+	}	
+//	return CDocument::OnSaveDocument(lpszPathName);
 }

@@ -61,7 +61,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <DelayLoadDLLs>opencv_core2410d.dll;opencv_highgui2410d.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>opencv_core2410d.dll;opencv_highgui2410d.dll;opencv_imgproc2410d.dll</DelayLoadDLLs>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
