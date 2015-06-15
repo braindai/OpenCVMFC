@@ -4,6 +4,12 @@
 
 #pragma once
 
+const int nStatusBarSeparator = 0;
+const int nStatusBarTime = 1;
+const int nStatusBarImgType = 2;
+const int nStatusBarPos = 3;
+const int nStatusBarValue = 4;
+
 class CMainFrame : public CMDIFrameWndEx
 {
 	DECLARE_DYNAMIC(CMainFrame)
@@ -28,11 +34,10 @@ public:
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
 #endif
-
+	CMFCStatusBar     m_wndStatusBar;
 protected:  // 控件条嵌入成员
 	CMFCMenuBar       m_wndMenuBar;
-	CMFCToolBar       m_wndToolBar;
-	CMFCStatusBar     m_wndStatusBar;
+	CMFCToolBar       m_wndToolBar;	
 	CMFCToolBarImages m_UserImages;
 
 // 生成的消息映射函数

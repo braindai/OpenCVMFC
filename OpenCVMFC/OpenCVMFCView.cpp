@@ -8,7 +8,7 @@
 #ifndef SHARED_HANDLERS
 #include "OpenCVMFC.h"
 #endif
-
+#include "MainFrm.h"
 #include "OpenCVMFCDoc.h"
 #include "OpenCVMFCView.h"
 #include "../Utility/Utility.h"
@@ -37,6 +37,8 @@ BEGIN_MESSAGE_MAP(COpenCVMFCView, CScrollView)
 	ON_COMMAND(ID_VIEW_ORIGIN, &COpenCVMFCView::OnViewOrigin)
 	ON_COMMAND(ID_VIEW_ZOOMIN, &COpenCVMFCView::OnViewZoomin)
 	ON_COMMAND(ID_VIEW_ZOOMOUT, &COpenCVMFCView::OnViewZoomout)
+//	ON_WM_MOUSEHWHEEL()
+ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
 // COpenCVMFCView 构造/析构
@@ -209,8 +211,14 @@ void COpenCVMFCView::OnImgRefresh()
 void COpenCVMFCView::OnMenuTest()
 {
 	// TODO:  在此添加命令处理程序代码
-	Invalidate();
-
+	//Invalidate();
+	double t = (double)getTickCount();
+	// 做点什么 ...
+	Sleep(100);
+	t = 1000*((double)getTickCount() - t) / getTickFrequency();
+	CString cs;
+	cs.Format(_T("%.3lf"), t);
+	((CMainFrame*)AfxGetMainWnd())->m_wndStatusBar.SetPaneText(nStatusBarTime,cs);
 	//test
 }
 
@@ -244,7 +252,9 @@ void COpenCVMFCView::OnViewOrigin()
 void COpenCVMFCView::OnViewZoomin()
 {
 	// TODO:  在此添加命令处理程序代码
-	m_dRatio /= 2;
+	if (m_dRatio < 0.125)
+		return;
+	m_dRatio /= 2;	
 	CSize  sizeTotal;
 	sizeTotal = CSize((int)(m_dRatio*m_workImg.cols), (int)(m_dRatio*m_workImg.rows));
 	SetScrollSizes(MM_TEXT, sizeTotal);  //  设置滚动条  
@@ -255,9 +265,33 @@ void COpenCVMFCView::OnViewZoomin()
 void COpenCVMFCView::OnViewZoomout()
 {
 	// TODO:  在此添加命令处理程序代码
+	if (m_dRatio > 8.0)
+		return;
 	m_dRatio *= 2;
 	CSize  sizeTotal;
 	sizeTotal = CSize((int)(m_dRatio*m_workImg.cols), (int)(m_dRatio*m_workImg.rows));
 	SetScrollSizes(MM_TEXT, sizeTotal);  //  设置滚动条  
 	Invalidate();
+}
+
+
+//void COpenCVMFCView::OnMouseHWheel(UINT nFlags, short zDelta, CPoint pt)
+//{
+//	// 此功能要求 Windows Vista 或更高版本。
+//	// _WIN32_WINNT 符号必须 >= 0x0600。
+//	// TODO:  在此添加消息处理程序代码和/或调用默认值
+//
+//	CScrollView::OnMouseHWheel(nFlags, zDelta, pt);
+//}
+
+
+BOOL COpenCVMFCView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+	// TODO:  在此添加消息处理程序代码和/或调用默认值
+	if (nFlags == MK_CONTROL)
+		if (zDelta < 0)
+			OnViewZoomin();
+		else if (zDelta > 0)
+			OnViewZoomout();
+	return CScrollView::OnMouseWheel(nFlags, zDelta, pt);
 }

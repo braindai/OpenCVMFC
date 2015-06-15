@@ -58,6 +58,8 @@ public:
 	afx_msg void OnViewZoomin();
 	afx_msg void OnViewZoomout();
 
+//	afx_msg void OnMouseHWheel(UINT nFlags, short zDelta, CPoint pt);
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 };
 
 #ifndef _DEBUG  // OpenCVMFCView.cpp 中的调试版本

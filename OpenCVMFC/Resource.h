@@ -38,6 +38,11 @@
 #define ID_VIEW_ORIGIN                  32789
 #define ID_VIEW_ZOOMOUT                 32790
 #define ID_VIEW_ZOOMIN                  32791
+#define ID_INDICATOR_TIME               59142
+#define ID_INDICATOR_TYPE               59143
+#define ID_INDICATOR_COL                59144
+#define ID_INDICATOR_POS                59144
+#define ID_INDICATOR_VALUE              59145
 
 // Next default values for new objects
 // 
