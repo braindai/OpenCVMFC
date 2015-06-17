@@ -35,10 +35,14 @@ BEGIN_MESSAGE_MAP(COpenCVMFCView, CScrollView)
 	ON_COMMAND(ID_Menu_TEST, &COpenCVMFCView::OnMenuTest)
 	ON_COMMAND(ID_COLOR_TO_GRAY, &COpenCVMFCView::OnColorToGray)
 	ON_COMMAND(ID_VIEW_ORIGIN, &COpenCVMFCView::OnViewOrigin)
-	ON_COMMAND(ID_VIEW_ZOOMIN, &COpenCVMFCView::OnViewZoomin)
-	ON_COMMAND(ID_VIEW_ZOOMOUT, &COpenCVMFCView::OnViewZoomout)
-//	ON_WM_MOUSEHWHEEL()
+	ON_COMMAND(ID_VIEW_ZOOMIN, &COpenCVMFCView::OnViewZoomIn)
+	ON_COMMAND(ID_VIEW_ZOOMOUT, &COpenCVMFCView::OnViewZoomOut)
 ON_WM_MOUSEWHEEL()
+ON_COMMAND(ID_IMAGE_INVERT, &COpenCVMFCView::OnImageInvert)
+ON_COMMAND(ID_FLIP_H, &COpenCVMFCView::OnFlipH)
+ON_COMMAND(ID_FLIP_V, &COpenCVMFCView::OnFlipV)
+ON_COMMAND(ID_FLIP, &COpenCVMFCView::OnFlip)
+ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
 // COpenCVMFCView 构造/析构
@@ -189,7 +193,6 @@ void COpenCVMFCView::OnInitialUpdate()
 }
 
 
-
 void COpenCVMFCView::OnImgApply()
 {
 	// TODO:  在此添加命令处理程序代码
@@ -199,7 +202,6 @@ void COpenCVMFCView::OnImgApply()
 	pDoc->SetModifiedFlag();
 }
 
-
 void COpenCVMFCView::OnImgRefresh()
 {
 	// TODO:  在此添加命令处理程序代码
@@ -207,21 +209,63 @@ void COpenCVMFCView::OnImgRefresh()
 	Invalidate();
 }
 
-
 void COpenCVMFCView::OnMenuTest()
 {
-	// TODO:  在此添加命令处理程序代码
-	//Invalidate();
-	double t = (double)getTickCount();
-	// 做点什么 ...
-	Sleep(100);
-	t = 1000*((double)getTickCount() - t) / getTickFrequency();
-	CString cs;
-	cs.Format(_T("%.3lf"), t);
-	((CMainFrame*)AfxGetMainWnd())->m_wndStatusBar.SetPaneText(nStatusBarTime,cs);
-	//test
-}
+	if (m_workImg.empty())
+		return;
+	CV_Assert(m_workImg.depth() != sizeof(uchar));
+	uchar table[256];
+	for (int i = 0; i < 256; ++i)
+		table[i] =(i/10)*10;
 
+	Mat lookUpTable(1, 256, CV_8U);
+	uchar* p = lookUpTable.data;
+	for (int i = 0; i < 256; i++)
+		p[i] = table[i];
+
+	Mat J;
+	int times=1;
+	CString cs;
+	cs = _T("start test......");
+	((CMainFrame*)AfxGetMainWnd())->m_wndStatusBar.SetPaneText(nStatusBarSeparator, cs);
+	cv::Mat I = m_workImg.clone();
+	double t = (double)getTickCount();
+
+	for (int i = 0; i < times; ++i)
+	{
+		//
+		//int channels = I.channels();
+		//int nRows = I.rows * channels;
+		//int nCols = I.cols;
+
+		//if (I.isContinuous())
+		//{
+		//	nCols *= nRows;
+		//	nRows = 1;
+		//}
+		//int k, j;
+		//uchar* p;
+		//for (k = 0; k < nRows; ++k)
+		//{
+		//	p = I.ptr<uchar>(k);
+		//	for (j = 0; j < nCols; ++j)
+		//	{
+		//		p[j] = table[p[j]];
+		//		p[j] = (p[j] / 10) * 10;
+		//	}
+		//}	
+
+		LUT(I, lookUpTable, J);
+
+	}
+	
+	// 做点什么 ...
+	t = 1000*((double)getTickCount() - t) / getTickFrequency();
+		cs.Format(_T("%.3lf"), t);
+	((CMainFrame*)AfxGetMainWnd())->m_wndStatusBar.SetPaneText(nStatusBarTime,cs);
+	m_workImg = J;
+	Invalidate();
+}
 
 void COpenCVMFCView::OnColorToGray()
 {
@@ -235,7 +279,6 @@ void COpenCVMFCView::OnColorToGray()
 	Invalidate();
 }
 
-
 void COpenCVMFCView::OnViewOrigin()
 {
 	// TODO:  在此添加命令处理程序代码
@@ -248,8 +291,7 @@ void COpenCVMFCView::OnViewOrigin()
 	Invalidate();
 }
 
-
-void COpenCVMFCView::OnViewZoomin()
+void COpenCVMFCView::OnViewZoomIn()
 {
 	// TODO:  在此添加命令处理程序代码
 	if (m_dRatio < 0.125)
@@ -261,8 +303,7 @@ void COpenCVMFCView::OnViewZoomin()
 	Invalidate();
 }
 
-
-void COpenCVMFCView::OnViewZoomout()
+void COpenCVMFCView::OnViewZoomOut()
 {
 	// TODO:  在此添加命令处理程序代码
 	if (m_dRatio > 8.0)
@@ -275,23 +316,75 @@ void COpenCVMFCView::OnViewZoomout()
 }
 
 
-//void COpenCVMFCView::OnMouseHWheel(UINT nFlags, short zDelta, CPoint pt)
-//{
-//	// 此功能要求 Windows Vista 或更高版本。
-//	// _WIN32_WINNT 符号必须 >= 0x0600。
-//	// TODO:  在此添加消息处理程序代码和/或调用默认值
-//
-//	CScrollView::OnMouseHWheel(nFlags, zDelta, pt);
-//}
-
-
 BOOL COpenCVMFCView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
 	// TODO:  在此添加消息处理程序代码和/或调用默认值
 	if (nFlags == MK_CONTROL)
+	{
+	
 		if (zDelta < 0)
-			OnViewZoomin();
+		{
+			OnViewZoomIn();
+		}
 		else if (zDelta > 0)
-			OnViewZoomout();
+		{
+			OnViewZoomOut();
+		}
+
+	}
 	return CScrollView::OnMouseWheel(nFlags, zDelta, pt);
+}
+
+
+void COpenCVMFCView::OnImageInvert()
+{
+	// TODO:  在此添加命令处理程序代码
+	if (m_workImg.empty())
+		return;
+	bitwise_not(m_workImg, m_workImg);
+	Invalidate();
+}
+
+
+void COpenCVMFCView::OnFlipH()
+{
+	// TODO:  在此添加命令处理程序代码
+	if (m_workImg.empty())
+		return;
+	flip(m_workImg,m_workImg,1);
+	Invalidate();
+}
+
+
+void COpenCVMFCView::OnFlipV()
+{
+	// TODO:  在此添加命令处理程序代码
+	if (m_workImg.empty())
+		return;
+	flip(m_workImg, m_workImg,0);
+	Invalidate();
+}
+
+
+void COpenCVMFCView::OnFlip()
+{
+	// TODO:  在此添加命令处理程序代码
+	if (m_workImg.empty())
+		return;
+	flip(m_workImg, m_workImg, -1);
+	Invalidate();	
+}
+
+
+void COpenCVMFCView::OnMouseMove(UINT nFlags, CPoint point)
+{
+	// TODO:  在此添加消息处理程序代码和/或调用默认值
+
+
+	CString cs;
+	CPoint pt = GetScrollPosition();
+	cs.Format(_T("%d,%d"), (int)((point.x + pt.x)/m_dRatio),(int)((point.y + pt.y)/m_dRatio));
+
+	((CMainFrame*)AfxGetMainWnd())->m_wndStatusBar.SetPaneText(nStatusBarPos, cs);
+	CScrollView::OnMouseMove(nFlags, point);
 }

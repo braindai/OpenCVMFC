@@ -6097,7 +6097,6 @@ void cvShiftDFT(CvArr * src_arr, CvArr * dst_arr )
         cvCopy(tmp, q2, 0);
     }
 }
-
 void CCVMFCView::OnDft() 
 {
 //    const char* filename = "image\\lena.jpg";

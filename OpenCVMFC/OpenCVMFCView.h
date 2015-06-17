@@ -55,11 +55,16 @@ public:
 	afx_msg void OnMenuTest();
 	afx_msg void OnColorToGray();
 	afx_msg void OnViewOrigin();
-	afx_msg void OnViewZoomin();
-	afx_msg void OnViewZoomout();
+	afx_msg void OnViewZoomIn();
+	afx_msg void OnViewZoomOut();
 
 //	afx_msg void OnMouseHWheel(UINT nFlags, short zDelta, CPoint pt);
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+	afx_msg void OnImageInvert();
+	afx_msg void OnFlipH();
+	afx_msg void OnFlipV();
+	afx_msg void OnFlip();
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // OpenCVMFCView.cpp 中的调试版本
