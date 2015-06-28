@@ -161,7 +161,7 @@ BEGIN
         MENUITEM "应用修改",                        ID_IMG_APPLY
         MENUITEM "恢复/刷新",                       ID_IMG_REFRESH
         MENUITEM SEPARATOR
-        MENUITEM "最近的文件",                       ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM "最近的文件",                       ID_FILE_MRU_FILE1
         MENUITEM SEPARATOR
         MENUITEM "退出(&X)",                      ID_APP_EXIT
     END
@@ -173,24 +173,39 @@ BEGIN
         MENUITEM "复制(&C)\tCtrl+C",              ID_EDIT_COPY
         MENUITEM "粘贴(&P)\tCtrl+V",              ID_EDIT_PASTE
         MENUITEM SEPARATOR
-        MENUITEM "测试",                          ID_Menu_TEST
+        MENUITEM "图像大小",                        ID_IMG_SIZE
+        MENUITEM SEPARATOR
+        MENUITEM "测试",                          ID_MENU_TEST
     END
-    POPUP "点处理"
+    POPUP "基本处理"
     BEGIN
-        MENUITEM "彩色变灰阶",                       ID_COLOR_TO_GRAY
-        MENUITEM "图像反相",                        ID_IMAGE_INVERT
-        MENUITEM SEPARATOR
-        MENUITEM "垂直镜像",                        ID_FLIP_V
-        MENUITEM "水平镜像",                        ID_FLIP_H
-        MENUITEM "180 度旋转",                     ID_FLIP
-        MENUITEM SEPARATOR
-        MENUITEM "30 度旋转",                      ID_ROTATION_30
-        MENUITEM "仿射变换",                        ID_WARP_AFFINE
-        MENUITEM "透视变换",                        ID_WARP_PERSPECT
-        MENUITEM SEPARATOR
-        MENUITEM "亮度变换",                        ID_IMAGE_ADJUST
-        MENUITEM "灰阶图像直方图",                     ID_IMAGE_HISTOGRAM
-        MENUITEM "直方图均衡化",                      ID_HIST_EQUALIZE
+        POPUP "点处理"
+        BEGIN
+            MENUITEM "彩色变灰阶",                       ID_COLOR_TO_GRAY
+            MENUITEM "图像反相",                        ID_IMAGE_INVERT
+            MENUITEM SEPARATOR
+            MENUITEM "垂直镜像",                        ID_FLIP_V
+            MENUITEM "水平镜像",                        ID_FLIP_H
+            MENUITEM "180度翻转",                      ID_FLIP
+            MENUITEM SEPARATOR
+            MENUITEM "30 度旋转",                      ID_ROTATION_30
+            MENUITEM "仿射变换",                        ID_WARP_AFFINE
+            MENUITEM "透视变换",                        ID_WARP_PERSPECT
+            MENUITEM SEPARATOR
+            MENUITEM "亮度对比度",                       ID_IMAGE_ADJUST
+            MENUITEM "灰阶图像直方图",                     ID_IMAGE_HISTOGRAM
+            MENUITEM "直方图均衡化",                      ID_HIST_EQUALIZE
+        END
+        POPUP "领域处理"
+        BEGIN
+            MENUITEM "均值滤波",                        ID_FILTER_BLUR
+            MENUITEM "Gauss 滤波",                    ID_FILTER_GAUSS
+            MENUITEM "中值滤波",                        ID_FILTER_MEDIAN
+            MENUITEM "双边滤波",                        32803
+            MENUITEM SEPARATOR
+            MENUITEM "Sobel 边缘检测",                  ID_EDGE_SOBEL
+            MENUITEM "Laplace 边缘检测",                ID_EDGE_LAPLACE
+        END
     END
     POPUP "视图(&V)"
     BEGIN
@@ -270,6 +285,34 @@ BEGIN
     DEFPUSHBUTTON   "确定",IDOK,113,41,50,14,WS_GROUP
 END
 
+IDD_DIALOG_PARAMBAR_ADJUST DIALOGEX 0, 0, 245, 36
+STYLE DS_SETFONT | WS_CHILD
+FONT 9, "宋体", 400, 0, 0x0
+BEGIN
+    PUSHBUTTON      "R",IDC_BUTTON_RESET,5,7,14,19
+    CONTROL         "",IDC_SLIDER_BRIGHTNESS,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,79,5,100,13
+    LTEXT           "亮度：",IDC_STATIC,53,8,24,8
+    LTEXT           "对比度：",IDC_STATIC,49,20,31,8
+    CONTROL         "",IDC_SLIDER_CONTRAST,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,79,18,100,13
+    CONTROL         "A",IDC_MFCBUTTON_APPLY,"MfcButton",WS_TABSTOP,22,7,13,19
+    EDITTEXT        IDC_EDIT_BRIGHTNESS,183,3,27,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_CONTRAST,183,19,27,12,ES_AUTOHSCROLL
+END
+
+IDD_DIALOG_PARAMBAR_TEST DIALOGEX 0, 0, 515, 37
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 9, "宋体", 400, 0, 0x0
+BEGIN
+    PUSHBUTTON      "test",IDC_BUTTON1,139,19,50,14
+END
+
+IDD_DIALOG_PARAMBAR_DUMMY DIALOGEX 0, 0, 393, 23
+STYLE DS_SETFONT | WS_CHILD
+FONT 9, "宋体", 400, 0, 0x0
+BEGIN
+    LTEXT           "TODO:  布局对话栏",IDC_STATIC,126,4,77,8
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -325,8 +368,55 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 55
     END
+
+    IDD_DIALOG_PARAMBAR_ADJUST, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_PARAMBAR_TEST, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_PARAMBAR_DUMMY, DIALOG
+    BEGIN
+        RIGHTMARGIN, 330
+        BOTTOMMARGIN, 16
+    END
 END
 #endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_DIALOG_PARAMBAR_ADJUST DLGINIT
+BEGIN
+    IDC_MFCBUTTON_APPLY, 0x37c, 369, 0
+0x4d3c, 0x4346, 0x7542, 0x7474, 0x6e6f, 0x535f, 0x7974, 0x656c, 0x343e, 
+0x2f3c, 0x464d, 0x4243, 0x7475, 0x6f74, 0x5f6e, 0x7453, 0x6c79, 0x3e65, 
+0x4d3c, 0x4346, 0x7542, 0x7474, 0x6e6f, 0x415f, 0x7475, 0x736f, 0x7a69, 
+0x3e65, 0x4146, 0x534c, 0x3c45, 0x4d2f, 0x4346, 0x7542, 0x7474, 0x6e6f, 
+0x415f, 0x7475, 0x736f, 0x7a69, 0x3e65, 0x4d3c, 0x4346, 0x7542, 0x7474, 
+0x6e6f, 0x545f, 0x6f6f, 0x746c, 0x7069, 0x3c3e, 0x4d2f, 0x4346, 0x7542, 
+0x7474, 0x6e6f, 0x545f, 0x6f6f, 0x746c, 0x7069, 0x3c3e, 0x464d, 0x4243, 
+0x7475, 0x6f74, 0x5f6e, 0x7546, 0x6c6c, 0x6554, 0x7478, 0x6f54, 0x6c6f, 
+0x543e, 0x5552, 0x3c45, 0x4d2f, 0x4346, 0x7542, 0x7474, 0x6e6f, 0x465f, 
+0x6c75, 0x546c, 0x7865, 0x5474, 0x6f6f, 0x3e6c, 0x4d3c, 0x4346, 0x7542, 
+0x7474, 0x6e6f, 0x435f, 0x7275, 0x6f73, 0x5472, 0x7079, 0x3e65, 0x3131, 
+0x2f3c, 0x464d, 0x4243, 0x7475, 0x6f74, 0x5f6e, 0x7543, 0x7372, 0x726f, 
+0x7954, 0x6570, 0x3c3e, 0x464d, 0x4243, 0x7475, 0x6f74, 0x5f6e, 0x6d49, 
+0x6761, 0x5465, 0x7079, 0x3e65, 0x3c38, 0x4d2f, 0x4346, 0x7542, 0x7474, 
+0x6e6f, 0x495f, 0x616d, 0x6567, 0x7954, 0x6570, 0x3c3e, 0x464d, 0x4243, 
+0x7475, 0x6f74, 0x5f6e, 0x6d49, 0x6761, 0x4f65, 0x546e, 0x706f, 0x463e, 
+0x4c41, 0x4553, 0x2f3c, 0x464d, 0x4243, 0x7475, 0x6f74, 0x5f6e, 0x6d49, 
+0x6761, 0x4f65, 0x546e, 0x706f, 0x3c3e, 0x464d, 0x4243, 0x7475, 0x6f74, 
+0x5f6e, 0x6d49, 0x6761, 0x4f65, 0x526e, 0x6769, 0x7468, 0x463e, 0x4c41, 
+0x4553, 0x2f3c, 0x464d, 0x4243, 0x7475, 0x6f74, 0x5f6e, 0x6d49, 0x6761, 
+0x4f65, 0x526e, 0x6769, 0x7468, "\076" 
+    0
+END
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -471,6 +561,7 @@ BEGIN
     IDS_STATUS_PANE2        "窗格 2"
     IDS_TOOLBAR_STANDARD    "标准"
     IDS_TOOLBAR_CUSTOMIZE   "自定义..."
+    IDS_PARAM_BAR           "参数条"
 END
 
 STRINGTABLE

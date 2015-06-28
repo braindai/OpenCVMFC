@@ -111,6 +111,11 @@
     <ClInclude Include="OpenCVMFC.h" />
     <ClInclude Include="OpenCVMFCDoc.h" />
     <ClInclude Include="OpenCVMFCView.h" />
+    <ClInclude Include="ParamBar.h" />
+    <ClInclude Include="ParamBar\AdjustParamBar.h" />
+    <ClInclude Include="ParamBar\DummyParamBar.h" />
+    <ClInclude Include="ParamBar\ParamBarBase.h" />
+    <ClInclude Include="ParamBar\TestParamBar.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -125,6 +130,11 @@
     <ClCompile Include="OpenCVMFC.cpp" />
     <ClCompile Include="OpenCVMFCDoc.cpp" />
     <ClCompile Include="OpenCVMFCView.cpp" />
+    <ClCompile Include="ParamBar.cpp" />
+    <ClCompile Include="ParamBar\AdjustParamBar.cpp" />
+    <ClCompile Include="ParamBar\DummyParamBar.cpp" />
+    <ClCompile Include="ParamBar\ParamBarBase.cpp" />
+    <ClCompile Include="ParamBar\TestParamBar.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -142,6 +152,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
     <None Include="res\OpenCVMFC.rc2" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

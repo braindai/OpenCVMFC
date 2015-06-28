@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="源文件\ParamBarDlg">
+      <UniqueIdentifier>{33f8ceb7-abe1-4d46-bc54-88c0044cf8e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\ParamBarDlg">
+      <UniqueIdentifier>{145f6b9f-e19c-4dc4-9956-e4db23f46028}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -45,6 +51,21 @@
     <ClInclude Include="..\Utility\Utility.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ParamBar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ParamBar\TestParamBar.h">
+      <Filter>头文件\ParamBarDlg</Filter>
+    </ClInclude>
+    <ClInclude Include="ParamBar\AdjustParamBar.h">
+      <Filter>头文件\ParamBarDlg</Filter>
+    </ClInclude>
+    <ClInclude Include="ParamBar\ParamBarBase.h">
+      <Filter>头文件\ParamBarDlg</Filter>
+    </ClInclude>
+    <ClInclude Include="ParamBar\DummyParamBar.h">
+      <Filter>头文件\ParamBarDlg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OpenCVMFC.cpp">
@@ -67,6 +88,21 @@
     </ClCompile>
     <ClCompile Include="..\Utility\Utility.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ParamBar.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ParamBar\TestParamBar.cpp">
+      <Filter>源文件\ParamBarDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="ParamBar\AdjustParamBar.cpp">
+      <Filter>源文件\ParamBarDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="ParamBar\ParamBarBase.cpp">
+      <Filter>源文件\ParamBarDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="ParamBar\DummyParamBar.cpp">
+      <Filter>源文件\ParamBarDlg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -96,5 +132,7 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
 </Project>

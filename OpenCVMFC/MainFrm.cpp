@@ -39,7 +39,7 @@ static UINT indicators[] =
 
 CMainFrame::CMainFrame()
 {
-	// TODO:  在此添加成员初始化代码
+	// TODO:  在此添加成员初始化代码	
 }
 
 CMainFrame::~CMainFrame()
@@ -99,13 +99,15 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
 
+
+
 	// TODO:  如果您不希望工具栏和菜单栏可停靠，请删除这五行
 	m_wndMenuBar.EnableDocking(CBRS_ALIGN_ANY);
 	m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
 	EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_wndMenuBar);
 	DockPane(&m_wndToolBar);
-
+	
 	// 启用 Visual Studio 2005 样式停靠窗口行为
 	CDockingManager::SetDockingMode(DT_SMART);
 	// 启用 Visual Studio 2005 样式停靠窗口自动隐藏行为
@@ -114,9 +116,19 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// 设置用于绘制所有用户界面元素的视觉管理器
 	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerVS2008));
 
+	CString strParamBar;
+	bNameValid = strParamBar.LoadString(IDS_PARAM_BAR);
+	ASSERT(bNameValid);
+	if (!m_wndParamBar.Create(strParamBar, this, CRect(0, 0, 600,80), FALSE, ID_PARAM_BAR, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_TOP ))
+	{
+		TRACE0("未能创建参数栏\n");
+		return -1;      // 未能创建
+	}
+	m_wndParamBar.EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_wndParamBar);
+
 	// 启用增强的窗口管理对话框
 	EnableWindowsDialog(ID_WINDOW_MANAGER, ID_WINDOW_MANAGER, TRUE);
-
 	// 启用工具栏和停靠窗口菜单替换
 	EnablePaneMenu(TRUE, ID_VIEW_CUSTOMIZE, strCustomize, ID_VIEW_TOOLBAR);
 

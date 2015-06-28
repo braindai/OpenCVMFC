@@ -7,8 +7,6 @@
 #include <Windows.h>
 #include <string>
 
-#define USE_MFC
-
 namespace Utility_DXQ{
 
 	//---------------------------------------------------------
@@ -82,6 +80,7 @@ namespace Utility_DXQ{
 	};
 
 using namespace std;
+#define USE_MFC
 class StringCov
 {
 public:
@@ -107,6 +106,10 @@ private:
 	wchar_t* m_wchar;
 };
 LPBITMAPINFO CtreateMapInfo(Mat workImg, int flag);
+
+//int ParseCmdString(string s,); // ½âÎöÃüÁî×Ö·û´®
+
+
 
 
 }

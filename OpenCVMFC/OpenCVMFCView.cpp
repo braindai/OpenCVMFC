@@ -32,7 +32,7 @@ BEGIN_MESSAGE_MAP(COpenCVMFCView, CScrollView)
 	ON_WM_RBUTTONUP()
 	ON_COMMAND(ID_IMG_APPLY, &COpenCVMFCView::OnImgApply)
 	ON_COMMAND(ID_IMG_REFRESH, &COpenCVMFCView::OnImgRefresh)
-	ON_COMMAND(ID_Menu_TEST, &COpenCVMFCView::OnMenuTest)
+	ON_COMMAND(ID_MENU_TEST, &COpenCVMFCView::OnMenuTest)
 	ON_COMMAND(ID_COLOR_TO_GRAY, &COpenCVMFCView::OnColorToGray)
 	ON_COMMAND(ID_VIEW_ORIGIN, &COpenCVMFCView::OnViewOrigin)
 	ON_COMMAND(ID_VIEW_ZOOMIN, &COpenCVMFCView::OnViewZoomIn)
@@ -43,6 +43,9 @@ ON_COMMAND(ID_FLIP_H, &COpenCVMFCView::OnFlipH)
 ON_COMMAND(ID_FLIP_V, &COpenCVMFCView::OnFlipV)
 ON_COMMAND(ID_FLIP, &COpenCVMFCView::OnFlip)
 ON_WM_MOUSEMOVE()
+ON_COMMAND(ID_IMAGE_ADJUST, &COpenCVMFCView::OnImageAdjust)
+ON_MESSAGE(WM_USER_IMGPROC_CMD, &COpenCVMFCView::OnUserCmd)
+ON_MESSAGE(WM_USER_IMGVIEW_UPDATE, &COpenCVMFCView::OnUserImgviewUpdate)
 END_MESSAGE_MAP()
 
 // COpenCVMFCView 构造/析构
@@ -88,9 +91,10 @@ void COpenCVMFCView::OnDraw(CDC* pDC)
 
 	if (!bImgLoaded)    {               //  有磁盘输入图像  
 		if (!pDoc->m_Img.empty()) {           //  尚未显示  
-			m_workImg = pDoc->m_Img.clone();         //  复制到工作位图 
+			m_backImg = pDoc->m_Img.clone();         //  复制到工作位图 
+			m_workImg = m_backImg.clone();
 			m_dibFlag = 1;
-//			m_ImageType = m_workImg.type;
+//			m_ImageType = m_backImg.type;
 //			m_SaveFlag = m_ImageType;
 //			pDoc->m_Display = 1;
 			bImgLoaded = TRUE;
@@ -100,7 +104,7 @@ void COpenCVMFCView::OnDraw(CDC* pDC)
 	if (m_dibFlag) {                        //  DIB 结构改变  
 		if (m_lpBmi)
 			free(m_lpBmi);
-		m_lpBmi = CtreateMapInfo(m_workImg,m_dibFlag);
+		m_lpBmi = CtreateMapInfo(m_backImg,m_dibFlag);
 		m_dibFlag = 0;
 
 		CSize  sizeTotal;
@@ -117,7 +121,7 @@ void COpenCVMFCView::OnDraw(CDC* pDC)
 	//else if (workImg)  pBits = workImg->imageData;
 
 	if (!m_workImg.empty()) {                          //  刷新窗口画面  
-		StretchDIBits(pDC->m_hDC, 0, 0,(int)(m_dRatio*m_workImg.cols),(int)(m_dRatio*m_workImg.rows), 0, 0, m_workImg.cols, m_workImg.rows, m_workImg.data, m_lpBmi, DIB_RGB_COLORS, SRCCOPY);
+		StretchDIBits(pDC->m_hDC, 0, 0, (int)(m_dRatio*m_workImg.cols), (int)(m_dRatio*m_workImg.rows), 0, 0, m_workImg.cols, m_workImg.rows, m_workImg.data, m_lpBmi, DIB_RGB_COLORS, SRCCOPY);
 	}
 }
 
@@ -198,7 +202,8 @@ void COpenCVMFCView::OnImgApply()
 	// TODO:  在此添加命令处理程序代码
 	COpenCVMFCDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
-	pDoc->m_Img = m_workImg.clone();
+	m_backImg = m_workImg.clone();
+	pDoc->m_Img = m_backImg.clone();
 	pDoc->SetModifiedFlag();
 }
 
@@ -211,9 +216,10 @@ void COpenCVMFCView::OnImgRefresh()
 
 void COpenCVMFCView::OnMenuTest()
 {
-	if (m_workImg.empty())
+	SwitchParamBar(ID_MENU_TEST);
+	if (m_backImg.empty())
 		return;
-	CV_Assert(m_workImg.depth() != sizeof(uchar));
+	CV_Assert(m_backImg.depth() != sizeof(uchar));
 	uchar table[256];
 	for (int i = 0; i < 256; ++i)
 		table[i] =(i/10)*10;
@@ -228,7 +234,7 @@ void COpenCVMFCView::OnMenuTest()
 	CString cs;
 	cs = _T("start test......");
 	((CMainFrame*)AfxGetMainWnd())->m_wndStatusBar.SetPaneText(nStatusBarSeparator, cs);
-	cv::Mat I = m_workImg.clone();
+	cv::Mat I = m_backImg.clone();
 	double t = (double)getTickCount();
 
 	for (int i = 0; i < times; ++i)
@@ -263,7 +269,8 @@ void COpenCVMFCView::OnMenuTest()
 	t = 1000*((double)getTickCount() - t) / getTickFrequency();
 		cs.Format(_T("%.3lf"), t);
 	((CMainFrame*)AfxGetMainWnd())->m_wndStatusBar.SetPaneText(nStatusBarTime,cs);
-	m_workImg = J;
+	m_backImg = J;
+	m_workImg = m_backImg.clone();
 	Invalidate();
 }
 
@@ -272,10 +279,17 @@ void COpenCVMFCView::OnColorToGray()
 	// TODO:  在此添加命令处理程序代码
 	if (m_workImg.empty())
 		return;
-	Mat img8u(m_workImg.rows,m_workImg.cols, CV_8UC1);
+	m_backImg = m_workImg.clone();
+	if (m_workImg.channels() != 3)
+	{
+		((CMainFrame*)AfxGetMainWnd())->m_wndStatusBar.SetPaneText(nStatusBarSeparator, _T("非RGB图像！"));
+		return;
+	}
+	Mat img8u(m_workImg.rows, m_workImg.cols, CV_8UC1);
 	cvtColor(m_workImg, img8u, CV_RGB2GRAY);
 	m_workImg = img8u;
 	m_dibFlag = 1;
+//	m_workImg = m_backImg.clone();
 	Invalidate();
 }
 
@@ -315,7 +329,6 @@ void COpenCVMFCView::OnViewZoomOut()
 	Invalidate();
 }
 
-
 BOOL COpenCVMFCView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
 	// TODO:  在此添加消息处理程序代码和/或调用默认值
@@ -335,46 +348,50 @@ BOOL COpenCVMFCView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	return CScrollView::OnMouseWheel(nFlags, zDelta, pt);
 }
 
-
 void COpenCVMFCView::OnImageInvert()
 {
 	// TODO:  在此添加命令处理程序代码
-	if (m_workImg.empty())
+	SwitchParamBar();
+	if (m_backImg.empty())
 		return;
+	m_backImg = m_workImg.clone();
 	bitwise_not(m_workImg, m_workImg);
+//	m_workImg = m_backImg.clone();
 	Invalidate();
 }
-
 
 void COpenCVMFCView::OnFlipH()
 {
 	// TODO:  在此添加命令处理程序代码
+	SwitchParamBar();
 	if (m_workImg.empty())
 		return;
-	flip(m_workImg,m_workImg,1);
+	m_backImg = m_workImg.clone();
+	flip(m_workImg, m_workImg, 1);
 	Invalidate();
 }
-
 
 void COpenCVMFCView::OnFlipV()
 {
 	// TODO:  在此添加命令处理程序代码
+	SwitchParamBar();
 	if (m_workImg.empty())
 		return;
-	flip(m_workImg, m_workImg,0);
+	m_backImg = m_workImg.clone();
+	flip(m_workImg, m_workImg, 0);
 	Invalidate();
 }
-
 
 void COpenCVMFCView::OnFlip()
 {
 	// TODO:  在此添加命令处理程序代码
+	SwitchParamBar();
 	if (m_workImg.empty())
 		return;
+	m_backImg = m_workImg.clone();
 	flip(m_workImg, m_workImg, -1);
 	Invalidate();	
 }
-
 
 void COpenCVMFCView::OnMouseMove(UINT nFlags, CPoint point)
 {
@@ -383,8 +400,75 @@ void COpenCVMFCView::OnMouseMove(UINT nFlags, CPoint point)
 
 	CString cs;
 	CPoint pt = GetScrollPosition();
-	cs.Format(_T("%d,%d"), (int)((point.x + pt.x)/m_dRatio),(int)((point.y + pt.y)/m_dRatio));
-
+	int col = (int)((point.x + pt.x) / m_dRatio);
+	int row = (int)((point.y + pt.y) / m_dRatio);
+	if (row < 0)
+		row = 0;
+	else if (row >= m_workImg.rows)
+		row = m_workImg.rows - 1;
+	if (col < 0)
+		col = 0;
+	else if (col >= m_workImg.cols)
+		col = m_workImg.cols - 1;
+	
+	cs.Format(_T("%d,%d"), row, col);
 	((CMainFrame*)AfxGetMainWnd())->m_wndStatusBar.SetPaneText(nStatusBarPos, cs);
-	CScrollView::OnMouseMove(nFlags, point);
+
+	if (m_workImg.depth() != CV_8U)
+		return;
+	const int channels = m_workImg.channels();
+	try{
+		switch (channels)
+		{
+		case 1:
+			cs.Format(_T("%3d,000,000"), m_workImg.at<uchar>(row, col));
+			((CMainFrame*)AfxGetMainWnd())->m_wndStatusBar.SetPaneText(nStatusBarValue, cs);
+			break;
+		case 3:
+			cs.Format(_T("%3d,%3d,%3d"), m_workImg.at<Vec3b>(row, col)[0],
+				m_workImg.at<Vec3b>(row, col)[1],
+				m_workImg.at<Vec3b>(row, col)[2]);
+			((CMainFrame*)AfxGetMainWnd())->m_wndStatusBar.SetPaneText(nStatusBarValue, cs);
+			break;
+		}
+	}
+	catch (cv::Exception &/*e*/)
+	{
+		cs = _T("error");
+		((CMainFrame*)AfxGetMainWnd())->m_wndStatusBar.SetPaneText(nStatusBarValue, cs);
+	}
+}
+
+void COpenCVMFCView::OnImageAdjust()
+{
+	// TODO:  在此添加命令处理程序代码
+	SwitchParamBar(ID_IMAGE_ADJUST);
+	m_backImg = m_workImg.clone();
+}
+
+void COpenCVMFCView::SwitchParamBar(int nCmdID /*=0*/)
+{
+	((CMainFrame*)AfxGetMainWnd())->m_wndParamBar.SwitchBar(nCmdID);
+}
+afx_msg LRESULT COpenCVMFCView::OnUserCmd(WPARAM wParam, LPARAM lParam)
+{
+	CParamBarBase* pbar = (CParamBarBase*)lParam;
+	if (pbar->RunImgProcess(m_workImg, m_backImg))
+		if (wParam == TRUE)
+			Invalidate();
+	return 0;
+}
+
+
+afx_msg LRESULT COpenCVMFCView::OnUserImgviewUpdate(WPARAM wParam, LPARAM/* lParam*/)
+{
+	BOOL bDir = (BOOL)wParam;
+	if (bDir)
+		m_backImg = m_workImg.clone();
+	else
+	{
+		m_workImg = m_backImg.clone();
+		Invalidate();
+	}	
+	return 0;
 }

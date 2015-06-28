@@ -11,6 +11,7 @@ protected: // 仅从序列化创建
 	COpenCVMFCView();
 	DECLARE_DYNCREATE(COpenCVMFCView)
 
+	Mat  m_backImg;
 	Mat  m_workImg;
 	BOOL bImgLoaded;
 	LPBITMAPINFO m_lpBmi;
@@ -65,6 +66,11 @@ public:
 	afx_msg void OnFlipV();
 	afx_msg void OnFlip();
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnImageAdjust();
+	void SwitchParamBar(int nCmdID = 0);
+protected:
+	afx_msg LRESULT OnUserCmd(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnUserImgviewUpdate(WPARAM wParam = TRUE, LPARAM lParam = 0);
 };
 
 #ifndef _DEBUG  // OpenCVMFCView.cpp 中的调试版本

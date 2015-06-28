@@ -3,6 +3,8 @@
 //
 
 #pragma once
+#include "ParamBar.h"
+
 
 const int nStatusBarSeparator = 0;
 const int nStatusBarTime = 1;
@@ -35,11 +37,12 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 	CMFCStatusBar     m_wndStatusBar;
+	CParamBar         m_wndParamBar;
 protected:  // 控件条嵌入成员
 	CMFCMenuBar       m_wndMenuBar;
 	CMFCToolBar       m_wndToolBar;	
 	CMFCToolBarImages m_UserImages;
-
+	
 // 生成的消息映射函数
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
@@ -49,5 +52,3 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 };
-
-

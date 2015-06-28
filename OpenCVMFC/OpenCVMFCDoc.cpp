@@ -176,7 +176,7 @@ BOOL COpenCVMFCDoc::OnSaveDocument(LPCTSTR lpszPathName)
 	{
 		bSaveSuccessFlag = imwrite(sCov.CStringToString(cs), m_Img);
 	}
-	catch (CException &e)
+	catch (CException & /*e*/)
 	{
 //		TRACE(e.GetErrorMessage());
 		bSaveSuccessFlag = false;

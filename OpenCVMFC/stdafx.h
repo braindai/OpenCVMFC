@@ -38,6 +38,9 @@
 #include <opencv2\opencv.hpp>
 using namespace cv;
 
+//user msg
+#define WM_USER_IMGPROC_CMD   WM_USER+100
+#define WM_USER_IMGVIEW_UPDATE WM_USER+101
 
 
 #ifdef _UNICODE
